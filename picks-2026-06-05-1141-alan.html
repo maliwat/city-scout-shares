@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>City Scout - picks</title>
+<style>
+  :root { --appt:#c0392b; --spot:#2c6e9b; --ink:#1f1d1a; --muted:#8a847c; --line:#e7e3dc; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin:0; -webkit-text-size-adjust:100%;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:var(--ink); background:#f7f6f3; }
+  .wrap { max-width:640px; margin:0 auto; padding:16px 16px 44px; }
+  header { margin-bottom:12px; }
+  header h1 { margin:0; font-size:18px; font-weight:650; }
+  .tabs { display:flex; gap:8px; margin-top:10px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .tabs::-webkit-scrollbar { display:none; }
+  .tab { font-size:13px; padding:8px 13px; border:1px solid var(--line); border-radius:999px; background:#faf9f7; cursor:pointer; white-space:nowrap; flex:none; }
+  .tab.active { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .tab .occ { opacity:.7; font-size:11px; }
+  /* map is hidden until JS + network are confirmed working */
+  #mapwrap { display:none; margin-bottom:14px; }
+  #map { height:52vh; min-height:280px; width:100%; border:1px solid var(--line); border-radius:12px; }
+  .appt-block { margin-bottom:18px; }
+  .appt-card { background:#fbf2f0; border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:10px; }
+  .appt-card .name { font-weight:650; font-size:16px; }
+  .recs { list-style:none; margin:0; padding:0; }
+  .row { display:flex; gap:12px; align-items:flex-start; background:#fff; border:1px solid var(--line);
+    border-radius:12px; padding:12px 14px; margin-bottom:10px; cursor:default; }
+  .appt-card .row { background:transparent; border:none; padding:0; margin:0; }
+  .pin { flex:none; width:26px; height:26px; border-radius:50%; color:#fff; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; background:var(--spot); }
+  .appt-card .pin { background:var(--appt); }
+  .meta { min-width:0; flex:1; display:flex; flex-direction:column; }
+  .name { font-size:15px; line-height:1.25; }
+  .name a { color:var(--ink); text-decoration:none; border-bottom:1px solid #d8d2c8; }
+  .name a:active, .name a:hover { border-bottom-color:var(--ink); }
+  .sub { font-size:12.5px; color:var(--muted); margin-top:3px; line-height:1.4; }
+  .dist { font-size:12.5px; font-weight:600; color:var(--spot); margin-top:3px; }
+  .star { color:#b5891f; font-weight:600; }
+  .tag { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; padding:1px 7px; border-radius:999px; margin-left:6px; }
+  .tag-return { background:#e2efe0; color:#3f6b32; }
+  .tag-want { background:#fbe3ea; color:#a3315f; }
+  .tag-lgbtq { background:#ece3f7; color:#6b3fa0; }
+  .empty { padding:14px; font-size:13px; color:var(--muted); }
+  .leaflet-popup-content { font-size:13px; line-height:1.4; }
+  .leaflet-popup-content b { font-size:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>City Scout - picks</h1>
+    <div class="tabs" id="tabs"></div>
+  </header>
+  <div id="mapwrap"><div id="map"></div></div>
+  <div id="static"><section class="appt-block" data-i="0"><div class="appt-card"><div class="row" style="padding:0;border:none;"><div class="pin">★</div><div class="meta"><div class="name">Dinner near Alan&#x27;s Place</div><div class="sub">Fri, Jun 5 · 6:00 PM<br><a href="https://www.google.com/maps/search/?api=1&query=The+Ritz+Plaza,+235+W+48th+St,+New+York,+NY+10036,+USA">The Ritz Plaza, 235 W 48th St, New York, NY 10036, USA</a></div></div></div></div><ul class="recs"><li class="row" data-i="0" data-n="1"><div class="pin">1</div><div class="meta"><div class="name"><a href="https://www.google.com/maps/place/?q=place_id:ChIJNUVFGtlZwokReMbMDzP1Aec" target="_blank" rel="noopener" onclick="event.stopPropagation()">Carnegie Diner &amp; Cafe</a></div><div class="sub"><span class="star">★ 4.5</span> (3659) · Diner<br>Avalon Midtown West, 828 8th Ave, New York</div><div class="dist">0.08 mi · 2 min walk</div></div></li><li class="row" data-i="0" data-n="2"><div class="pin">2</div><div class="meta"><div class="name"><a href="https://www.google.com/maps/place/?q=place_id:ChIJY6CJiVlZwokRUuEZJOmVFY8" target="_blank" rel="noopener" onclick="event.stopPropagation()">ICHIRAN Ramen NY Times Square</a></div><div class="sub"><span class="star">★ 4.6</span> (3697) · Ramen<br>152 W 49th St, New York</div><div class="dist">0.15 mi · 3 min walk</div></div></li><li class="row" data-i="0" data-n="3"><div class="pin">3</div><div class="meta"><div class="name"><a href="https://www.google.com/maps/place/?q=place_id:ChIJFQ55zVdYwokRUyAEIvUGfHw" target="_blank" rel="noopener" onclick="event.stopPropagation()">Gallagher’s Steakhouse NYC</a></div><div class="sub"><span class="star">★ 4.6</span> (9493) · Steak House<br>228 W 52nd St, New York</div><div class="dist">0.18 mi · 4 min walk</div></div></li><li class="row" data-i="0" data-n="4"><div class="pin">4</div><div class="meta"><div class="name"><a href="https://www.google.com/maps/place/?q=place_id:ChIJ34SOS_9YwokR7vXpNdS9tZ8" target="_blank" rel="noopener" onclick="event.stopPropagation()">Oceana</a></div><div class="sub"><span class="star">★ 4.5</span> (1541) · Seafood<br>1221 Avenue of the Americas, 120 W 49th St, New York</div><div class="dist">0.21 mi · 4 min walk</div></div></li><li class="row" data-i="0" data-n="5"><div class="pin">5</div><div class="meta"><div class="name"><a href="https://www.google.com/maps/place/?q=place_id:ChIJ3ej3nFVYwokRzAPIjwtNjg4" target="_blank" rel="noopener" onclick="event.stopPropagation()">Amor Loco</a></div><div class="sub"><span class="star">★ 4.7</span> (5306) · Mexican<br>134 W 46th St, New York</div><div class="dist">0.23 mi · 5 min walk</div></div></li></ul></section></div>
+</div>
+<script>
+// Progressive enhancement: the list above is plain HTML and shows everywhere,
+// including no-JS contexts like iOS Quick Look / the Messages preview. If JS
+// runs and Leaflet loads over the network, we reveal an interactive map on top
+// and turn the appointment sections into tabs. If anything fails, the static
+// list is the whole experience -- nothing breaks.
+var APPTS = [{"title": "Dinner near Alan's Place", "when": "Fri, Jun 5 \u00b7 6:00 PM", "loc": "The Ritz Plaza, 235 W 48th St, New York, NY 10036, USA", "occasion": "dinner", "lat": 40.7608363, "lng": -73.98601699999999, "prompt": null, "spots": [{"name": "Carnegie Diner & Cafe", "cuisine": "Diner", "addr": "Avalon Midtown West, 828 8th Ave, New York", "rating": 4.5, "count": 3659, "dist": 0.08, "lat": 40.7620089, "lng": -73.9860031, "url": "https://www.google.com/maps/place/?q=place_id:ChIJNUVFGtlZwokReMbMDzP1Aec", "kind": null}, {"name": "ICHIRAN Ramen NY Times Square", "cuisine": "Ramen", "addr": "152 W 49th St, New York", "rating": 4.6, "count": 3697, "dist": 0.15, "lat": 40.760057499999995, "lng": -73.9833246, "url": "https://www.google.com/maps/place/?q=place_id:ChIJY6CJiVlZwokRUuEZJOmVFY8", "kind": null}, {"name": "Gallagher\u2019s Steakhouse NYC", "cuisine": "Steak House", "addr": "228 W 52nd St, New York", "rating": 4.6, "count": 9493, "dist": 0.18, "lat": 40.7628486, "lng": -73.9838549, "url": "https://www.google.com/maps/place/?q=place_id:ChIJFQ55zVdYwokRUyAEIvUGfHw", "kind": null}, {"name": "Oceana", "cuisine": "Seafood", "addr": "1221 Avenue of the Americas, 120 W 49th St, New York", "rating": 4.5, "count": 1541, "dist": 0.21, "lat": 40.7597641, "lng": -73.9823074, "url": "https://www.google.com/maps/place/?q=place_id:ChIJ34SOS_9YwokR7vXpNdS9tZ8", "kind": null}, {"name": "Amor Loco", "cuisine": "Mexican", "addr": "134 W 46th St, New York", "rating": 4.7, "count": 5306, "dist": 0.23, "lat": 40.757894199999996, "lng": -73.98391769999999, "url": "https://www.google.com/maps/place/?q=place_id:ChIJ3ej3nFVYwokRzAPIjwtNjg4", "kind": null}]}];
+(function(){
+  if(!APPTS.length) return;
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  // load Leaflet CSS + JS at runtime; enhance() only runs if the JS loads.
+  var css=document.createElement('link'); css.rel='stylesheet';
+  css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(css);
+  var js=document.createElement('script');
+  js.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+  js.onload=enhance; js.onerror=function(){ /* stay on the static list */ };
+  document.head.appendChild(js);
+
+  var map, layer, markers={};
+
+  function divIcon(label,bg){
+    return L.divIcon({ className:'', html:
+      '<div style="background:'+bg+';width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 1px 5px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;">'+
+      '<span style="transform:rotate(45deg);color:#fff;font-weight:700;font-size:14px;font-family:sans-serif;">'+label+'</span></div>',
+      iconSize:[30,30], iconAnchor:[15,30], popupAnchor:[0,-30] });
+  }
+
+  function enhance(){
+    document.getElementById('mapwrap').style.display='block';
+    map=L.map('map',{scrollWheelZoom:true,tap:true});
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      { attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:20, subdomains:'abcd' }).addTo(map);
+    layer=L.layerGroup().addTo(map);
+
+    var tabsEl=document.getElementById('tabs');
+    if(APPTS.length>1){
+      APPTS.forEach(function(a,i){
+        var t=document.createElement('div'); t.className='tab';
+        t.innerHTML=esc(a.title)+' <span class="occ">'+esc((a.when||'').split(' · ')[0])+'</span>';
+        t.addEventListener('click',function(){show(i);});
+        tabsEl.appendChild(t);
+      });
+    }
+    show(0);
+  }
+
+  function show(i){
+    var a=APPTS[i];
+    // one block visible at a time once enhanced
+    var blocks=document.querySelectorAll('.appt-block');
+    for(var b=0;b<blocks.length;b++){
+      blocks[b].style.display = (String(i)===blocks[b].getAttribute('data-i')) ? 'block' : 'none';
+    }
+    var tabs=document.querySelectorAll('.tab');
+    for(var t=0;t<tabs.length;t++){ tabs[t].classList.toggle('active', t===i); }
+
+    layer.clearLayers(); markers={};
+    var bounds=[];
+    var am=L.marker([a.lat,a.lng],{icon:divIcon('★','#c0392b')}).addTo(layer);
+    am.bindPopup('<b>'+esc(a.title)+'</b><br>'+esc(a.when)+'<br>'+esc(a.loc));
+    bounds.push([a.lat,a.lng]);
+    (a.spots||[]).forEach(function(s,k){
+      var n=k+1;
+      var m=L.marker([s.lat,s.lng],{icon:divIcon(n,'#2c6e9b')}).addTo(layer);
+      m.bindPopup('<b>'+esc(s.name)+'</b><br>'+esc(s.cuisine)+(s.rating?' · ★ '+s.rating+' ('+(s.count||'')+')':'')+'<br>'+esc(s.addr)+'<br>'+(s.dist!=null?s.dist+' mi from appt':''));
+      markers[n]=m; bounds.push([s.lat,s.lng]);
+    });
+    if(bounds.length>1) map.fitBounds(bounds,{padding:[55,55]}); else map.setView([a.lat,a.lng],16);
+    setTimeout(function(){ map.invalidateSize(); },60);
+
+    // wire the visible block's rows to pan the map (the name link still wins)
+    var rows=document.querySelectorAll('.appt-block[data-i="'+i+'"] .row[data-n]');
+    for(var r=0;r<rows.length;r++){
+      (function(row){
+        row.style.cursor='pointer';
+        row.onclick=function(ev){
+          if(ev.target.closest && ev.target.closest('a')) return;
+          var m=markers[row.getAttribute('data-n')];
+          if(m){ map.setView(m.getLatLng(),17,{animate:true}); m.openPopup(); }
+        };
+      })(rows[r]);
+    }
+  }
+})();
+</script>
+</body>
+</html>
